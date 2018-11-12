@@ -1,0 +1,61 @@
+USE GD1C2018;
+GO
+-- FACTURA
+ALTER TABLE [NPM].[Factura]  DROP CONSTRAINT [FK_Factura_Cliente]
+GO
+
+ALTER TABLE [NPM].[Factura]  DROP CONSTRAINT [FK_Factura_Tipo_Pago] 
+GO
+
+ALTER TABLE [NPM].[Factura]  DROP CONSTRAINT [FK_Factura_Estadia] 
+GO
+
+-- ITEM FACTURA
+ALTER TABLE [NPM].[Item_Factura]  DROP CONSTRAINT [FK_Item_Factura_Consumo] 
+GO
+
+ALTER TABLE [NPM].[Item_Factura]  DROP CONSTRAINT [FK_Item_Factura_Factura]
+GO
+
+-- ROLES X USUARIO
+ALTER TABLE [NPM].[Roles_x_Usuario]  DROP CONSTRAINT [FK_Roles_x_Usuario_Rol]
+GO
+
+ALTER TABLE [NPM].[Roles_x_Usuario]  DROP CONSTRAINT [FK_Roles_x_Usuario_Usuario]
+GO
+
+-- USUARIO 
+ALTER TABLE [NPM].[Usuario]  DROP CONSTRAINT [FK_Usuario_Persona] 
+GO
+
+--- TABLAS
+-- Limpieza de datos
+TRUNCATE TABLE NPM.Cliente
+TRUNCATE TABLE NPM.Factura
+TRUNCATE TABLE NPM.Funcion
+GO
+TRUNCATE TABLE NPM.Funciones_x_Rol
+TRUNCATE TABLE NPM.Item_Factura
+TRUNCATE TABLE NPM.Rol
+GO
+TRUNCATE TABLE NPM.Roles_x_Usuario
+TRUNCATE TABLE NPM.Tipo_Documento
+TRUNCATE TABLE NPM.Tipo_Pago
+TRUNCATE TABLE NPM.Usuario
+
+-- Borrado de tablas
+GO
+DROP TABLE NPM.Cliente
+DROP TABLE NPM.Factura
+DROP TABLE NPM.Funcion
+GO
+DROP TABLE NPM.Funciones_x_Rol
+DROP TABLE NPM.Item_Factura
+DROP TABLE NPM.Rol
+GO
+DROP TABLE NPM.Roles_x_Usuario
+DROP TABLE NPM.Tipo_Documento
+DROP TABLE NPM.Tipo_Pago
+DROP TABLE NPM.Usuario
+
+GO
