@@ -225,6 +225,7 @@
   <ItemGroup>
     <Content Include="Images\palco.ico" />
     <Content Include="SQL\BorrarTablas-Relaciones.sql" />
+    <Content Include="SQL\DER - GDD.jpeg" />
     <Content Include="SQL\script_creación_inicial.sql" />
   </ItemGroup>
   <ItemGroup>

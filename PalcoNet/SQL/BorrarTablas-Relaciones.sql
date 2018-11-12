@@ -1,31 +1,31 @@
 USE GD1C2018;
 GO
 -- FACTURA
-ALTER TABLE [NPM].[Factura]  DROP CONSTRAINT [FK_Factura_Cliente]
+ALTER TABLE [MANG].[Factura]  DROP CONSTRAINT [FK_Factura_Cliente]
 GO
 
-ALTER TABLE [NPM].[Factura]  DROP CONSTRAINT [FK_Factura_Tipo_Pago] 
+ALTER TABLE [MANG].[Factura]  DROP CONSTRAINT [FK_Factura_Tipo_Pago] 
 GO
 
-ALTER TABLE [NPM].[Factura]  DROP CONSTRAINT [FK_Factura_Estadia] 
+ALTER TABLE [MANG].[Factura]  DROP CONSTRAINT [FK_Factura_Estadia] 
 GO
 
 -- ITEM FACTURA
-ALTER TABLE [NPM].[Item_Factura]  DROP CONSTRAINT [FK_Item_Factura_Consumo] 
+ALTER TABLE [MANG].[Item_Factura]  DROP CONSTRAINT [FK_Item_Factura_Consumo] 
 GO
 
-ALTER TABLE [NPM].[Item_Factura]  DROP CONSTRAINT [FK_Item_Factura_Factura]
+ALTER TABLE [MANG].[Item_Factura]  DROP CONSTRAINT [FK_Item_Factura_Factura]
 GO
 
 -- ROLES X USUARIO
-ALTER TABLE [NPM].[Roles_x_Usuario]  DROP CONSTRAINT [FK_Roles_x_Usuario_Rol]
+ALTER TABLE [MANG].[Roles_x_Usuario]  DROP CONSTRAINT [FK_Roles_x_Usuario_Rol]
 GO
 
-ALTER TABLE [NPM].[Roles_x_Usuario]  DROP CONSTRAINT [FK_Roles_x_Usuario_Usuario]
+ALTER TABLE [MANG].[Roles_x_Usuario]  DROP CONSTRAINT [FK_Roles_x_Usuario_Usuario]
 GO
 
 -- USUARIO 
-ALTER TABLE [NPM].[Usuario]  DROP CONSTRAINT [FK_Usuario_Persona] 
+ALTER TABLE [MANG].[Usuario]  DROP CONSTRAINT [FK_Usuario_Persona] 
 GO
 
 --- TABLAS
