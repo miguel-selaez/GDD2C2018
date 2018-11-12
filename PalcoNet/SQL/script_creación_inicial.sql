@@ -1,107 +1,272 @@
-USE GD1C2018;
+USE GD2C2018;
 GO
 
---CREATE SCHEMA NPM; 
---GO
+CREATE SCHEMA MANG; 
+
+GO
 print (CONCAT('Creacion de tablas ', CONVERT(VARCHAR, GETDATE(), 114)))
 
 --------------------TABLAS---------------------------------------------
-CREATE TABLE NPM.Usuario(
-	id_usuario int NOT NULL IDENTITY,
-	nombre_usuario nvarchar(255) NOT NULL,
-	pass varbinary(256) NOT NULL,
-	baja_u bit NOT NULL DEFAULT 1,
-	intentos_fallidos int NULL,
-	id_persona int NULL,
-	PRIMARY KEY(id_usuario)
-)
+CREATE TABLE [MANG].[Factura] (
+  [fa_id] int,
+  [fa_id_empresa] int,
+  [fa_nro] numeric(18,0),
+  [fa_fecha] datetime,
+  [fa_total] numeric(18,2),
+  PRIMARY KEY ([fa_id])
+);
 
 GO
 
-CREATE TABLE NPM.Tipo_Documento(
-	id_tipo_documento int NOT NULL IDENTITY,
-	descripcion_td nvarchar(50),
-	baja_td bit NOT NULL,
-	PRIMARY KEY(id_tipo_documento)
-)
+CREATE TABLE [MANG].[Ubicacion] (
+  [ub_id] int,
+  [ub_fila] char,
+  [ub_asiento] int,
+  [ub_sin_numerar] bit,
+  [ub_precio] numerio(18,0),
+  [ub_id_publicacion] int,
+  [ub_id_tipo_ubicacion] int,
+  PRIMARY KEY ([ub_id])
+);
 
 GO
 
-CREATE TABLE NPM.Item_Factura(
-	id_item_factura int NOT NULL IDENTITY,
-	id_consumo int NULL,
-	leyenda nvarchar(100) NULL,
-	subtotal numeric(18,2) NULL,
-	id_factura numeric(18,0) NOT NULL,
-	PRIMARY KEY(id_item_factura)
-)
+CREATE TABLE [MANG].[Tipo_Ubicacion] (
+  [tu_id] int,
+  [tu_codigo] numeric(18,0),
+  [tu_descripcion] nvarchar,
+  [tu_baja] bit,
+  PRIMARY KEY ([tu_id])
+);
 
 GO
 
-CREATE TABLE NPM.Factura(
-	id_factura numeric(18,0) NOT NULL,
-	id_estadia int NOT NULL,
-	id_cliente int NOT NULL,	
-	dias_alojamiento int NOT NULL,
-	dias_faltantes int NULL,
-	fecha_facturacion datetime,
-	id_tipo_pago int NULL,
-	total_factura numeric(18,2) NULL,
-	PRIMARY KEY(id_factura)
-)
-
-GO 
-
-CREATE TABLE NPM.Tipo_Pago(
-	id_tipo_pago int NOT NULL IDENTITY,
-	descripcion_tp nvarchar(50) NULL,
-	baja_tp bit NOT NULL DEFAULT 1,
-	PRIMARY KEY(id_tipo_pago)
-)
-
-GO 
-
-CREATE TABLE NPM.Funcion(
-	id_funcion int NOT NULL IDENTITY,
-	descripcion_f nvarchar(255) NOT NULL,
-	baja_f bit NOT NULL DEFAULT 1,
-	PRIMARY KEY(id_funcion)
-)
+CREATE TABLE [MANG].[Premio] (
+  [pr_id] int,
+  [pr_codigo] nvarchar,
+  [pr_descripcion] nvarchar,
+  [pr_cantidad] int,
+  [pr_costo] int,
+  [pr_baja] bit,
+  PRIMARY KEY ([pr_id])
+);
 
 GO
 
-CREATE TABLE NPM.Funciones_x_Rol(
-	id_funcion int NOT NULL,
-	id_rol int NOT NULL,
-	PRIMARY KEY(id_funcion, id_rol)
-)
+CREATE TABLE [MANG].[Rol_x_Usuario] (
+  [rxu_id_usuario] int,
+  [rxu_id_rol] int,
+  PRIMARY KEY ([rxu_id_usuario], [rxu_id_rol])
+);
 
 GO
 
-CREATE TABLE NPM.Rol(
-	id_rol int NOT NULL IDENTITY,
-	descripcion_rl nvarchar(255) NOT NULL,
-	baja_rl bit NOT NULL DEFAULT 1,
-	PRIMARY KEY(id_rol)
-)
+CREATE TABLE [MANG].[Tarjeta] (
+  [ta_id] int,
+  [ta_nro] nvarchar,
+  [ta_vencimiento] nvarchar,
+  [ta_cod_verificador] char(3),
+  [ta_baja] bit,
+  PRIMARY KEY ([ta_id])
+);
 
 GO
 
-CREATE TABLE NPM.Roles_x_Usuario(
-	id_usuario int NOT NULL,
-	id_rol int NOT NULL,
-	PRIMARY KEY(id_usuario, id_rol)
-)
+CREATE TABLE [MANG].[Rubro] (
+  [ru_id] int,
+  [ru_descripcion] nvarchar,
+  PRIMARY KEY ([ru_id])
+);
+
+GO
+
+CREATE TABLE [MANG].[Funcion_x_Rol] (
+  [fxr_id_funcion] int,
+  [fxr_id_rol] int,
+  PRIMARY KEY ([fxr_id_funcion], [fxr_id_rol])
+);
+
+GO
+
+CREATE TABLE [MANG].[Canje] (
+  [ca_id] int,
+  [ca_id_cliente] int,
+  [ca_id_premio] int,
+  [ca_fecha_canje] datetime,
+  PRIMARY KEY ([ca_id])
+);
+
+GO
+
+CREATE TABLE [MANG].[Item_Factura] (
+  [if_id] int,
+  [if_id_compra] int,
+  [if_d_factura] int,
+  [if_monto] numeric(18,2),
+  [if_cantidad] int,
+  [if_descripcion] nvarchar,
+  PRIMARY KEY ([if_id])
+);
+
+GO
+
+CREATE TABLE [MANG].[Forma_Pago] (
+  [fp_id] int,
+  [fp_descripcion] nvarchar,
+  [fp_baja] bit,
+  PRIMARY KEY ([fp_id])
+);
+
+GO
+
+CREATE TABLE [MANG].[Publicacion] (
+  [p_id] int,
+  [p_codigo] numeric(18,0),
+  [p_descripcion] nvarchar,
+  [p_fecha_publicacion] datetime,
+  [p_fecha_venc] datetime,
+  [p_fecha_espectaculo] datetime,
+  [p_direccion] nvarchar,
+  [p_id_estado_publicacion] int,
+  [p_id_rubro] int,
+  [p_id_grado] int,
+  PRIMARY KEY ([p_id])
+);
+
+GO
+
+CREATE TABLE [MANG].[Compra] (
+  [co_id] int,
+  [co_id_cliente] int,
+  [co_id_ubicacion] int,
+  [co_fecha_compra] datetime,
+  [co_puntos_obtenidos] int,
+  [co_puntos_restantes] int,
+  [co_fecha_venc_puntos] datetime,
+  [co_facturada] bit,
+  [co_forma_pago_id] int,
+  PRIMARY KEY ([co_id])
+);
+
+GO
+
+CREATE TABLE [MANG].[Grado] (
+  [g_id] int,
+  [g_prioridad] nvarchar,
+  [g_comision] numeric(18,0),
+  PRIMARY KEY ([g_id])
+);
+
+GO
+
+CREATE TABLE [MANG].[Show] (
+  [s_id] int,
+  [s_fecha] datetime,
+  [s_id_publicacion] int,
+  PRIMARY KEY ([s_id])
+);
+
+GO
+
+CREATE TABLE [MANG].[Cliente] (
+  [c_id] int,
+  [c_nombre] nvarchar,
+  [c_apellido] nvarchar,
+  [c_id_tipo_documento] int,
+  [c_nro_documento] nvarchar,
+  [c_cuil] nvarchar,
+  [c_mail] nvarchar,
+  [c_telefono] nvarchar,
+  [c_fecha_nacimiento] datetime,
+  [c_calle] nvarchar,
+  [c_nro_calle] numeric(18,0),
+  [c_piso] numeric(18,0),
+  [c_depto] nvarchar,
+  [c_localidad] nvarchar,
+  [c_cod_postal] nvarchar,
+  [c_id_tarjeta] int,
+  [c_id_usuario] int,
+  [c_fecha_alta] datetime,
+  [c_baja] bit,
+  [c_inconsistente] bit,
+  PRIMARY KEY ([c_id])
+);
+
+GO
+
+CREATE TABLE [MANG].[Usuario] (
+  [u_id] int,
+  [u_nombre_usuario] varchar,
+  [u_password] varbinary,
+  [u_baja] bit,
+  [u_intentos_fallidos] int,
+  PRIMARY KEY ([u_id])
+);
+
+GO
+
+CREATE TABLE [MANG].[Estado_Publicacion] (
+  [ep_id] int,
+  [ep_descripcion] nvarchar,
+  PRIMARY KEY ([ep_id])
+);
+
+GO
+
+CREATE TABLE [MANG].[Rol] (
+  [r_id] int,
+  [r_descripcion] nvarchar,
+  [r_baja] bit,
+  PRIMARY KEY ([r_id])
+);
+
+GO
+
+CREATE TABLE [MANG].[Funcion] (
+  [f_id] int,
+  [f_descripcion] nvarchar,
+  [f_baja] bit,
+  PRIMARY KEY ([f_id])
+);
+
+GO
+
+CREATE TABLE [MANG].[Empresa] (
+  [e_id] int,
+  [e_razon_social] nvarchar,
+  [e_mail] nvarchar,
+  [e_telefono] nvarchar,
+  [e_cuit] nvarchar,
+  [e_calle] nvarchar,
+  [e_nro_calle] numeric(18,0),
+  [e_piso] numeric(18,0),
+  [e_depto] nvarchar,
+  [e_localidad] nvarchar,
+  [e_cod_postal] nvarchar,
+  [e_ciudad] nvarchar,
+  [e_id_usuario] int,
+  [e_baja] bit,
+  PRIMARY KEY ([e_id])
+);
+
+GO
+
+CREATE TABLE [MANG].[Tipo_Documento] (
+  [td_id] int,
+  [td_descripcion] nvarchar,
+  [td_baja] bit,
+  PRIMARY KEY ([td_id])
+);
 
 GO
 
 print (CONCAT('Creacion de SPs ', CONVERT(VARCHAR, GETDATE(), 114)))
 
 IF EXISTS (SELECT 1 FROM sysobjects WHERE name='P_Login')
-	DROP PROCEDURE NPM.P_Login
+	DROP PROCEDURE MANG.P_Login
 GO 	
 
-CREATE PROCEDURE NPM.P_Login  
+CREATE PROCEDURE MANG.P_Login  
 	@user nvarchar(255),
 	@pass nvarchar(50)
 AS
@@ -118,7 +283,7 @@ BEGIN
 		p.id_persona,
 		p.nombre,
 		p.apellido,
-		NPM.FX_Mostrar_Fecha(p.fecha_nacimiento) as 'fecha_nacimiento',
+		MANG.FX_Mostrar_Fecha(p.fecha_nacimiento) as 'fecha_nacimiento',
 		p.telefono,
 		p.numero_documento,
 		p.mail,
@@ -127,14 +292,14 @@ BEGIN
 		d.*,
 		pa.*
 	FROM
-		NPM.Usuario as u
-		LEFT JOIN NPM.Persona as p
+		MANG.Usuario as u
+		LEFT JOIN MANG.Persona as p
 			ON u.id_persona = p.id_persona
-		LEFT JOIN NPM.Direccion as d
+		LEFT JOIN MANG.Direccion as d
 			ON p.id_direccion = d.id_direccion
-		LEFT JOIN NPM.Tipo_Documento as t
+		LEFT JOIN MANG.Tipo_Documento as t
 			ON p.id_tipo_documento = t.id_tipo_documento
-		LEFT JOIN NPM.Pais as pa
+		LEFT JOIN MANG.Pais as pa
 			ON pa.id_pais = d.id_pais
 	WHERE
 		UPPER(u.nombre_usuario) = UPPER(@user)
@@ -146,18 +311,18 @@ END
 GO
 
 IF EXISTS (SELECT 1 FROM sysobjects WHERE name='P_Obtener_Roles_x_Usuario')
-	DROP PROCEDURE NPM.P_Obtener_Roles_x_Usuario
+	DROP PROCEDURE MANG.P_Obtener_Roles_x_Usuario
 GO 	
 
-CREATE PROCEDURE NPM.P_Obtener_Roles_x_Usuario  
+CREATE PROCEDURE MANG.P_Obtener_Roles_x_Usuario  
 	@id int
 AS
 BEGIN 
 	SELECT 
 		R.*
 	FROM 
-		NPM.Rol as R
-		INNER JOIN NPM.Roles_x_Usuario as RU
+		MANG.Rol as R
+		INNER JOIN MANG.Roles_x_Usuario as RU
 			ON R.id_rol = RU.id_rol
 	WHERE 
 		RU.id_usuario = @id
@@ -170,17 +335,17 @@ END
 GO
 
 IF EXISTS (SELECT 1 FROM sysobjects WHERE name='P_Obtener_Funciones_x_Rol')
-	DROP PROCEDURE NPM.P_Obtener_Funciones_x_Rol
+	DROP PROCEDURE MANG.P_Obtener_Funciones_x_Rol
 GO 	
 
-CREATE PROCEDURE NPM.P_Obtener_Funciones_x_Rol 
+CREATE PROCEDURE MANG.P_Obtener_Funciones_x_Rol 
 	@id int
 AS
 BEGIN 
 	SELECT 
 		F.*
 	FROM 
-		NPM.Funcion as F
+		MANG.Funcion as F
 		INNER JOIN Funciones_x_Rol as FR
 			ON F.id_funcion = FR.id_funcion
 	WHERE 
@@ -194,10 +359,10 @@ END
 GO
 
 IF EXISTS (SELECT 1 FROM sysobjects WHERE name='P_Obtener_Roles')
-	DROP PROCEDURE NPM.P_Obtener_Roles
+	DROP PROCEDURE MANG.P_Obtener_Roles
 GO 	
 
-CREATE PROCEDURE NPM.P_Obtener_Roles  
+CREATE PROCEDURE MANG.P_Obtener_Roles  
 	@descripcion nvarchar(255),
 	@baja bit
 AS
@@ -205,7 +370,7 @@ BEGIN
 	SELECT 
 		R.*
 	FROM 
-		NPM.Rol as R
+		MANG.Rol as R
 	WHERE
 		(R.descripcion_rl like '%'+ @descripcion + '%' OR @descripcion IS NULL)
 		AND (R.baja_rl = @baja OR @baja IS NULL)
@@ -217,10 +382,10 @@ END
 GO
 
 IF EXISTS (SELECT 1 FROM sysobjects WHERE name='FX_Mostrar_Fecha')
-	DROP FUNCTION NPM.FX_Mostrar_Fecha
+	DROP FUNCTION MANG.FX_Mostrar_Fecha
 GO 	
 
-CREATE FUNCTION NPM.FX_Mostrar_Fecha(@fecha datetime)  
+CREATE FUNCTION MANG.FX_Mostrar_Fecha(@fecha datetime)  
 RETURNS varchar(10)   
 AS   
 BEGIN  
@@ -236,17 +401,17 @@ END;
 GO
 
 IF EXISTS (SELECT 1 FROM sysobjects WHERE name='P_Obtener_Funciones')
-	DROP PROCEDURE NPM.P_Obtener_Funciones
+	DROP PROCEDURE MANG.P_Obtener_Funciones
 GO 	
 
-CREATE PROCEDURE NPM.P_Obtener_Funciones 
+CREATE PROCEDURE MANG.P_Obtener_Funciones 
 	@baja bit
 AS
 BEGIN 
 	SELECT 
 		F.*
 	FROM 
-		NPM.Funcion as F
+		MANG.Funcion as F
 	WHERE 
 		F.baja_f = @baja
 		AND F.descripcion_f <> 'ABM USUARIO'
@@ -258,10 +423,10 @@ END
 GO
 
 IF EXISTS (SELECT 1 FROM sysobjects WHERE name='P_Guardar_Rol')
-	DROP PROCEDURE NPM.P_Guardar_Rol
+	DROP PROCEDURE MANG.P_Guardar_Rol
 GO 	
 
-CREATE PROCEDURE NPM.P_Guardar_Rol 
+CREATE PROCEDURE MANG.P_Guardar_Rol 
 	@id int, 
 	@descripcion nvarchar(255),
 	@baja bit
@@ -269,14 +434,14 @@ AS
 BEGIN 
 	IF @id = 0
 	BEGIN 
-		INSERT INTO NPM.Rol (descripcion_rl, baja_rl)
+		INSERT INTO MANG.Rol (descripcion_rl, baja_rl)
 		VALUES (@descripcion, @baja)
 
 		SELECT id_out = @@IDENTITY
 	END 
 	ELSE 
 	BEGIN 
-		UPDATE NPM.Rol 
+		UPDATE MANG.Rol 
 		SET 
 			descripcion_rl = @descripcion,
 			baja_rl = @baja
@@ -295,24 +460,24 @@ END
 GO
 
 IF EXISTS (SELECT 1 FROM sysobjects WHERE name='P_Guardar_Funcion_x_Rol')
-	DROP PROCEDURE NPM.P_Guardar_Funcion_x_Rol
+	DROP PROCEDURE MANG.P_Guardar_Funcion_x_Rol
 GO 	
 
-CREATE PROCEDURE NPM.P_Guardar_Funcion_x_Rol 
+CREATE PROCEDURE MANG.P_Guardar_Funcion_x_Rol 
 	@id_funcion int, 
 	@id_rol int
 AS
 BEGIN 
-	INSERT INTO NPM.Funciones_x_Rol(id_funcion, id_rol)
+	INSERT INTO MANG.Funciones_x_Rol(id_funcion, id_rol)
 	VALUES (@id_funcion, @id_rol)
 END
 GO
 
 IF EXISTS (SELECT 1 FROM sysobjects WHERE name='P_Obtener_Usuarios')
-	DROP PROCEDURE NPM.P_Obtener_Usuarios
+	DROP PROCEDURE MANG.P_Obtener_Usuarios
 GO 	
 
-CREATE PROCEDURE NPM.P_Obtener_Usuarios  
+CREATE PROCEDURE MANG.P_Obtener_Usuarios  
 	@usuario nvarchar(255),
 	@baja bit
 AS
@@ -326,7 +491,7 @@ BEGIN
 		p.id_persona,
 		p.nombre,
 		p.apellido,
-		NPM.FX_Mostrar_Fecha(p.fecha_nacimiento) as 'fecha_nacimiento',
+		MANG.FX_Mostrar_Fecha(p.fecha_nacimiento) as 'fecha_nacimiento',
 		p.telefono,
 		p.numero_documento,
 		p.mail,
@@ -335,14 +500,14 @@ BEGIN
 		d.*,
 		pa.*
 	FROM
-		NPM.Usuario as u
-		LEFT JOIN NPM.Persona as p
+		MANG.Usuario as u
+		LEFT JOIN MANG.Persona as p
 			ON u.id_persona = p.id_persona
-		LEFT JOIN NPM.Direccion as d
+		LEFT JOIN MANG.Direccion as d
 			ON p.id_direccion = d.id_direccion
-		LEFT JOIN NPM.Tipo_Documento as t
+		LEFT JOIN MANG.Tipo_Documento as t
 			ON p.id_tipo_documento = t.id_tipo_documento
-		LEFT JOIN NPM.Pais as pa
+		LEFT JOIN MANG.Pais as pa
 			ON pa.id_pais = d.id_pais
 	WHERE
 		(U.nombre_usuario like '%'+ @usuario + '%' OR @usuario IS NULL)
@@ -355,10 +520,10 @@ END
 GO
 
 IF EXISTS (SELECT 1 FROM sysobjects WHERE name='P_Obtener_TiposDocumento')
-	DROP PROCEDURE NPM.P_Obtener_TiposDocumento
+	DROP PROCEDURE MANG.P_Obtener_TiposDocumento
 GO 	
 
-CREATE PROCEDURE NPM.P_Obtener_TiposDocumento  
+CREATE PROCEDURE MANG.P_Obtener_TiposDocumento  
 	@descripcion nvarchar(255),
 	@baja bit
 AS
@@ -366,7 +531,7 @@ BEGIN
 	SELECT 
 		T.*
 	FROM 
-		NPM.Tipo_Documento as T
+		MANG.Tipo_Documento as T
 	WHERE
 		(T.descripcion_td like '%'+ @descripcion + '%' OR @descripcion IS NULL)
 		AND (T.baja_td = @baja OR @baja IS NULL)
@@ -378,10 +543,10 @@ END
 GO
 
 IF EXISTS (SELECT 1 FROM sysobjects WHERE name='P_Guardar_Usuario')
-	DROP PROCEDURE NPM.P_Guardar_Usuario
+	DROP PROCEDURE MANG.P_Guardar_Usuario
 GO 	
 
-CREATE PROCEDURE NPM.P_Guardar_Usuario 
+CREATE PROCEDURE MANG.P_Guardar_Usuario 
 	@id int, 
 	@nombre_usuario nvarchar(255),
 	@pass nvarchar(50),
@@ -392,7 +557,7 @@ AS
 BEGIN 
 	IF @id = 0
 	BEGIN 
-		INSERT INTO NPM.Usuario(nombre_usuario, pass, baja_u, intentos_fallidos, id_persona)
+		INSERT INTO MANG.Usuario(nombre_usuario, pass, baja_u, intentos_fallidos, id_persona)
 		VALUES (@nombre_usuario, HASHBYTES('SHA2_256', @pass), @baja, 0, @id_persona)
 
 		SELECT @id_out = @@IDENTITY
@@ -401,7 +566,7 @@ BEGIN
 	BEGIN 
 		IF @pass IS NULL
 		BEGIN
-			UPDATE NPM.Usuario
+			UPDATE MANG.Usuario
 			SET 
 				nombre_usuario = @nombre_usuario,
 				baja_u = @baja,
@@ -411,7 +576,7 @@ BEGIN
 		END 
 		ELSE
 		BEGIN
-			UPDATE NPM.Usuario
+			UPDATE MANG.Usuario
 			SET 
 				nombre_usuario = @nombre_usuario,
 				pass = HASHBYTES('SHA2_256', @pass),
@@ -423,11 +588,11 @@ BEGIN
 
 		SELECT @id_out = @id;
 
-		DELETE NPM.Usuario_x_Hotel
+		DELETE MANG.Usuario_x_Hotel
 		WHERE 
 			id_usuario = @id;
 
-		DELETE NPM.Roles_x_Usuario
+		DELETE MANG.Roles_x_Usuario
 		WHERE 
 			id_usuario = @id;
 
@@ -439,24 +604,24 @@ END
 GO
 
 IF EXISTS (SELECT 1 FROM sysobjects WHERE name='P_Guardar_Rol_x_Usuario')
-	DROP PROCEDURE NPM.P_Guardar_Rol_x_Usuario
+	DROP PROCEDURE MANG.P_Guardar_Rol_x_Usuario
 GO 	
 
-CREATE PROCEDURE NPM.P_Guardar_Rol_x_Usuario 
+CREATE PROCEDURE MANG.P_Guardar_Rol_x_Usuario 
 	@id_usuario int, 
 	@id_rol int
 AS
 BEGIN 
-	INSERT INTO NPM.Roles_x_Usuario(id_usuario, id_rol)
+	INSERT INTO MANG.Roles_x_Usuario(id_usuario, id_rol)
 	VALUES (@id_usuario, @id_rol)
 END
 
 GO
 
 IF EXISTS (SELECT 1 FROM sysobjects WHERE name='P_Guardar_Cliente')
-	DROP PROCEDURE NPM.P_Guardar_Cliente
+	DROP PROCEDURE MANG.P_Guardar_Cliente
 GO 	
-CREATE PROCEDURE [NPM].[P_Guardar_Cliente] 
+CREATE PROCEDURE [MANG].[P_Guardar_Cliente] 
 	@id int, 
 	@id_persona int,
 	@baja bit, 
@@ -465,14 +630,14 @@ AS
 BEGIN 
 	IF @id = 0
 	BEGIN 
-		INSERT INTO NPM.Cliente(id_persona, baja_cl)
+		INSERT INTO MANG.Cliente(id_persona, baja_cl)
 		VALUES (@id_persona, @baja)
 
 		SELECT @id_out = @@IDENTITY
 	END 
 	ELSE 
 	BEGIN 
-		UPDATE NPM.Cliente
+		UPDATE MANG.Cliente
 		SET 
 			id_persona = @id_persona,
 			baja_cl = @baja
@@ -487,9 +652,9 @@ BEGIN
 END
 GO
 IF EXISTS (SELECT 1 FROM sysobjects WHERE name='P_Obtener_Clientes')
-	DROP PROCEDURE NPM.P_Obtener_Clientes
+	DROP PROCEDURE MANG.P_Obtener_Clientes
 GO 
-CREATE PROCEDURE [NPM].[P_Obtener_Clientes]  
+CREATE PROCEDURE [MANG].[P_Obtener_Clientes]  
 	@tipo_identificacion nvarchar(100),
 	@numero_documento numeric(18,0),
 	@mail nvarchar(255),
@@ -503,7 +668,7 @@ BEGIN
 		p.id_persona,
 		p.nombre,
 		p.apellido,
-		NPM.FX_Mostrar_Fecha(p.fecha_nacimiento) as 'fecha_nacimiento',
+		MANG.FX_Mostrar_Fecha(p.fecha_nacimiento) as 'fecha_nacimiento',
 		p.telefono,
 		p.numero_documento,
 		p.mail,
@@ -512,14 +677,14 @@ BEGIN
 		d.*,
 		pa.*
 	FROM
-		NPM.Cliente as c
-		LEFT JOIN NPM.Persona as p
+		MANG.Cliente as c
+		LEFT JOIN MANG.Persona as p
 			ON c.id_persona = p.id_persona
-		LEFT JOIN NPM.Direccion as d
+		LEFT JOIN MANG.Direccion as d
 			ON p.id_direccion = d.id_direccion
-		LEFT JOIN NPM.Tipo_Documento as t
+		LEFT JOIN MANG.Tipo_Documento as t
 			ON p.id_tipo_documento = t.id_tipo_documento
-		LEFT JOIN NPM.Pais as pa
+		LEFT JOIN MANG.Pais as pa
 			ON pa.id_pais = d.id_pais
 	WHERE
 		(p.mail LIKE '%' + @mail + '%' OR @mail IS NULL) AND
@@ -534,15 +699,15 @@ END
 GO
 
 IF EXISTS (SELECT 1 FROM sysobjects WHERE name='P_Validar_Mail_CLiente')
-	DROP PROCEDURE NPM.P_Validar_Mail_CLiente
+	DROP PROCEDURE MANG.P_Validar_Mail_CLiente
 GO 
-CREATE PROCEDURE [NPM].[P_Validar_Mail_CLiente]
+CREATE PROCEDURE [MANG].[P_Validar_Mail_CLiente]
 	@v_mail nvarchar(255),
 	@v_flag bit = 0 out
 AS
 BEGIN
 	SET NOCOUNT ON
-	SET @v_flag = ISNULL((SELECT TOP 1 1 FROM NPM.Persona p WHERE p.mail = @v_mail),0)
+	SET @v_flag = ISNULL((SELECT TOP 1 1 FROM MANG.Persona p WHERE p.mail = @v_mail),0)
 	RETURN @v_flag
 END
 GO
@@ -552,13 +717,13 @@ print (CONCAT('INSERTS ', CONVERT(VARCHAR, GETDATE(), 114)))
 BEGIN TRY
 BEGIN TRANSACTION
 -- ROLES
-INSERT INTO NPM.Rol VALUES 
+INSERT INTO MANG.Rol VALUES 
 ('ADMINISTRADOR',0),
 ('EMPRESA',0),
 ('CLIENTE',0)
 
 -- FUNCIONES
-INSERT INTO NPM.Funcion VALUES 
+INSERT INTO MANG.Funcion VALUES 
 ('ABM ROL', 0),
 ('ABM USUARIO',0),
 ('ABM CLIENTE',0),
@@ -573,7 +738,7 @@ INSERT INTO NPM.Funcion VALUES
 ('LISTADO ESTADISTICO',0)
 
 -- USUARIO
---EXEC NPM.P_Alta_Persona 
+--EXEC MANG.P_Alta_Persona 
 --	null,
 --	'Administrador General',
 --	null,
@@ -587,11 +752,11 @@ INSERT INTO NPM.Funcion VALUES
 --	0,
 --	@id_persona_usuario OUTPUT
 
---INSERT INTO NPM.Usuario VALUES
+--INSERT INTO MANG.Usuario VALUES
 --('admin', HASHBYTES('SHA2_256', CONVERT(nvarchar(50), 'w23e')), 0, 0);
 
 -- FUNCIONES X ROL
---INSERT INTO NPM.Funciones_x_Rol (id_rol, id_funcion) VALUES 
+--INSERT INTO MANG.Funciones_x_Rol (id_rol, id_funcion) VALUES 
 --(1, 1),
 --(1, 2),
 --(1, 3),
@@ -609,11 +774,11 @@ INSERT INTO NPM.Funcion VALUES
 --(3,7)
 
 -- ROLES X USUARIO
-INSERT INTO NPM.Roles_x_Usuario (id_usuario, id_rol) VALUES (1, 1)
+INSERT INTO MANG.Roles_x_Usuario (id_usuario, id_rol) VALUES (1, 1)
 
 --TIPO_DOCUMENTO
-INSERT NPM.Tipo_Documento VALUES ('DNI',0) 
-INSERT NPM.Tipo_Documento VALUES ('PASAPORTE',0) 
+INSERT MANG.Tipo_Documento VALUES ('DNI',0) 
+INSERT MANG.Tipo_Documento VALUES ('PASAPORTE',0) 
 
 COMMIT TRANSACTION
 
@@ -633,80 +798,5 @@ GO
 print (CONCAT('Relaciones ', CONVERT(VARCHAR, GETDATE(), 114)))
 ---------------RELACIONES ------------------
 
--- FACTURA
-ALTER TABLE [NPM].[Factura]  WITH CHECK ADD  CONSTRAINT [FK_Factura_Cliente] FOREIGN KEY([id_cliente])
-REFERENCES [NPM].[Cliente] ([id_cliente])
-GO
-
-ALTER TABLE [NPM].[Factura] CHECK CONSTRAINT [FK_Factura_Cliente]
-GO
-
-ALTER TABLE [NPM].[Factura]  WITH CHECK ADD  CONSTRAINT [FK_Factura_Tipo_Pago] FOREIGN KEY([id_tipo_pago])
-REFERENCES [NPM].[Tipo_Pago] ([id_tipo_pago])
-GO
-
-ALTER TABLE [NPM].[Factura] CHECK CONSTRAINT [FK_Factura_Tipo_Pago]
-GO
-
-ALTER TABLE [NPM].[Factura]  WITH CHECK ADD  CONSTRAINT [FK_Factura_Estadia] FOREIGN KEY([id_estadia])
-REFERENCES [NPM].[Estadia] ([id_estadia])
-GO
-
-ALTER TABLE [NPM].[Factura] CHECK CONSTRAINT [FK_Factura_Estadia]
-GO
-
-
--- FUNCIONES X ROL
-ALTER TABLE [NPM].[Funciones_x_Rol]  WITH CHECK ADD  CONSTRAINT [FK_Funciones_x_Rol_Funcion] FOREIGN KEY([id_funcion])
-REFERENCES [NPM].[Funcion] ([id_funcion])
-GO
-
-ALTER TABLE [NPM].[Funciones_x_Rol] CHECK CONSTRAINT [FK_Funciones_x_Rol_Funcion]
-GO
-
-ALTER TABLE [NPM].[Funciones_x_Rol]  WITH CHECK ADD  CONSTRAINT [FK_Funciones_x_Rol_Rol] FOREIGN KEY([id_rol])
-REFERENCES [NPM].[Rol] ([id_rol])
-GO
-
-ALTER TABLE [NPM].[Funciones_x_Rol] CHECK CONSTRAINT [FK_Funciones_x_Rol_Rol]
-GO
-
--- ITEM FACTURA
-ALTER TABLE [NPM].[Item_Factura]  WITH CHECK ADD  CONSTRAINT [FK_Item_Factura_Consumo] FOREIGN KEY([id_consumo])
-REFERENCES [NPM].[Consumo] ([id_consumo])
-GO
-
-ALTER TABLE [NPM].[Item_Factura] CHECK CONSTRAINT [FK_Item_Factura_Consumo]
-GO
-
-ALTER TABLE [NPM].[Item_Factura]  WITH CHECK ADD  CONSTRAINT [FK_Item_Factura_Factura] FOREIGN KEY([id_factura])
-REFERENCES [NPM].[Factura] ([id_factura])
-GO
-
-ALTER TABLE [NPM].[Item_Factura] CHECK CONSTRAINT [FK_Item_Factura_Factura]
-GO
-
--- ROLES X USUARIO
-ALTER TABLE [NPM].[Roles_x_Usuario]  WITH CHECK ADD  CONSTRAINT [FK_Roles_x_Usuario_Rol] FOREIGN KEY([id_rol])
-REFERENCES [NPM].[Rol] ([id_rol])
-GO
-
-ALTER TABLE [NPM].[Roles_x_Usuario] CHECK CONSTRAINT [FK_Roles_x_Usuario_Rol]
-GO
-
-ALTER TABLE [NPM].[Roles_x_Usuario]  WITH CHECK ADD  CONSTRAINT [FK_Roles_x_Usuario_Usuario] FOREIGN KEY([id_usuario])
-REFERENCES [NPM].[Usuario] ([id_usuario])
-GO
-
-ALTER TABLE [NPM].[Roles_x_Usuario] CHECK CONSTRAINT [FK_Roles_x_Usuario_Usuario]
-GO
-
--- USUARIO 
-ALTER TABLE [NPM].[Usuario]  WITH CHECK ADD  CONSTRAINT [FK_Usuario_Persona] FOREIGN KEY([id_persona])
-REFERENCES [NPM].[Persona] ([id_persona])
-GO
-
-ALTER TABLE [NPM].[Usuario] CHECK CONSTRAINT [FK_Usuario_Persona]
-GO
 
 print (CONCAT('Fin del Script Inicial', CONVERT(VARCHAR, GETDATE(), 114)))

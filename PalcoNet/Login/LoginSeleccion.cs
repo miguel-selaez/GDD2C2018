@@ -1,5 +1,4 @@
 ﻿using PalcoNet.Model;
-using PalcoNet.DAO;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -24,15 +23,6 @@ namespace PalcoNet.Login
             _user = user;
 
             BindRoles();
-            BindHoteles();
-        }
-
-        private void BindHoteles()
-        {
-            cbHoteles.DataSource = null;
-            cbHoteles.DataSource = _user.HotelesAsignados;
-            cbHoteles.DisplayMember = "Nombre";
-            cbHoteles.SelectedIndex = 0;
         }
 
         private void BindRoles()
@@ -45,9 +35,8 @@ namespace PalcoNet.Login
 
         private void btnContinue_Click(object sender, EventArgs e)
         {
-            var selectedHotel = (Model.Hotel) cbHoteles.SelectedValue;
             var selectedRol = (Model.Rol) cbRoles.SelectedValue;
-            _inicio.SetSession(_user, selectedHotel , selectedRol);
+            _inicio.SetSession(_user, selectedRol);
             _inicio.Show();
             Close();
         }
