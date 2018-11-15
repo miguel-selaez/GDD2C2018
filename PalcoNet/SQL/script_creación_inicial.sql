@@ -13,6 +13,7 @@ CREATE TABLE [MANG].[Factura] (
   [fa_nro] numeric(18,0),
   [fa_fecha] datetime,
   [fa_total] numeric(18,2),
+  [fa_id_forma_pago] int,
   PRIMARY KEY ([fa_id])
 );
 
@@ -20,10 +21,10 @@ GO
 
 CREATE TABLE [MANG].[Ubicacion] (
   [ub_id] int,
-  [ub_fila] char,
-  [ub_asiento] int,
+  [ub_fila] varchar(3),
+  [ub_asiento] numeric(18,0),
   [ub_sin_numerar] bit,
-  [ub_precio] numerio(18,0),
+  [ub_precio] numeric(18,0),
   [ub_id_publicacion] int,
   [ub_id_tipo_ubicacion] int,
   PRIMARY KEY ([ub_id])
@@ -34,7 +35,7 @@ GO
 CREATE TABLE [MANG].[Tipo_Ubicacion] (
   [tu_id] int,
   [tu_codigo] numeric(18,0),
-  [tu_descripcion] nvarchar,
+  [tu_descripcion] nvarchar(255),
   [tu_baja] bit,
   PRIMARY KEY ([tu_id])
 );
@@ -43,10 +44,10 @@ GO
 
 CREATE TABLE [MANG].[Premio] (
   [pr_id] int,
-  [pr_codigo] nvarchar,
-  [pr_descripcion] nvarchar,
+  [pr_codigo] nvarchar(50),
+  [pr_descripcion] nvarchar(100),
   [pr_cantidad] int,
-  [pr_costo] int,
+  [pr_costo_puntos] int,
   [pr_baja] bit,
   PRIMARY KEY ([pr_id])
 );
@@ -63,8 +64,8 @@ GO
 
 CREATE TABLE [MANG].[Tarjeta] (
   [ta_id] int,
-  [ta_nro] nvarchar,
-  [ta_vencimiento] nvarchar,
+  [ta_nro] nvarchar(50),
+  [ta_vencimiento] nvarchar(8),
   [ta_cod_verificador] char(3),
   [ta_baja] bit,
   PRIMARY KEY ([ta_id])
@@ -74,7 +75,7 @@ GO
 
 CREATE TABLE [MANG].[Rubro] (
   [ru_id] int,
-  [ru_descripcion] nvarchar,
+  [ru_descripcion] nvarchar(255),
   PRIMARY KEY ([ru_id])
 );
 
@@ -99,20 +100,20 @@ CREATE TABLE [MANG].[Canje] (
 GO
 
 CREATE TABLE [MANG].[Item_Factura] (
-  [if_id] int,
-  [if_id_compra] int,
-  [if_d_factura] int,
-  [if_monto] numeric(18,2),
-  [if_cantidad] int,
-  [if_descripcion] nvarchar,
-  PRIMARY KEY ([if_id])
+  [i_id] int,
+  [i_id_compra] int,
+  [i_d_factura] int,
+  [i_monto] numeric(18,2),
+  [i_cantidad] int,
+  [i_descripcion] nvarchar(60),
+  PRIMARY KEY ([i_id])
 );
 
 GO
 
 CREATE TABLE [MANG].[Forma_Pago] (
   [fp_id] int,
-  [fp_descripcion] nvarchar,
+  [fp_descripcion] nvarchar(255),
   [fp_baja] bit,
   PRIMARY KEY ([fp_id])
 );
@@ -122,14 +123,15 @@ GO
 CREATE TABLE [MANG].[Publicacion] (
   [p_id] int,
   [p_codigo] numeric(18,0),
-  [p_descripcion] nvarchar,
+  [p_descripcion] nvarchar(255),
   [p_fecha_publicacion] datetime,
   [p_fecha_venc] datetime,
   [p_fecha_espectaculo] datetime,
-  [p_direccion] nvarchar,
+  [p_direccion] nvarchar(255),
   [p_id_estado_publicacion] int,
   [p_id_rubro] int,
   [p_id_grado] int,
+  [p_id_empresa] int,
   PRIMARY KEY ([p_id])
 );
 
@@ -144,7 +146,6 @@ CREATE TABLE [MANG].[Compra] (
   [co_puntos_restantes] int,
   [co_fecha_venc_puntos] datetime,
   [co_facturada] bit,
-  [co_forma_pago_id] int,
   PRIMARY KEY ([co_id])
 );
 
@@ -152,7 +153,7 @@ GO
 
 CREATE TABLE [MANG].[Grado] (
   [g_id] int,
-  [g_prioridad] nvarchar,
+  [g_prioridad] nvarchar(50),
   [g_comision] numeric(18,0),
   PRIMARY KEY ([g_id])
 );
@@ -170,20 +171,20 @@ GO
 
 CREATE TABLE [MANG].[Cliente] (
   [c_id] int,
-  [c_nombre] nvarchar,
-  [c_apellido] nvarchar,
+  [c_nombre] nvarchar(255),
+  [c_apellido] nvarchar(255),
   [c_id_tipo_documento] int,
-  [c_nro_documento] nvarchar,
-  [c_cuil] nvarchar,
-  [c_mail] nvarchar,
-  [c_telefono] nvarchar,
+  [c_nro_documento] numeric(18,0),
+  [c_cuil] nvarchar(50),
+  [c_mail] nvarchar(255),
+  [c_telefono] nvarchar(50),
   [c_fecha_nacimiento] datetime,
-  [c_calle] nvarchar,
+  [c_calle] nvarchar(255),
   [c_nro_calle] numeric(18,0),
   [c_piso] numeric(18,0),
-  [c_depto] nvarchar,
-  [c_localidad] nvarchar,
-  [c_cod_postal] nvarchar,
+  [c_depto] nvarchar(255),
+  [c_localidad] nvarchar(255),
+  [c_cod_postal] nvarchar(255),
   [c_id_tarjeta] int,
   [c_id_usuario] int,
   [c_fecha_alta] datetime,
@@ -196,7 +197,7 @@ GO
 
 CREATE TABLE [MANG].[Usuario] (
   [u_id] int,
-  [u_nombre_usuario] varchar,
+  [u_nombre_usuario] varchar(100),
   [u_password] varbinary,
   [u_baja] bit,
   [u_intentos_fallidos] int,
@@ -207,7 +208,7 @@ GO
 
 CREATE TABLE [MANG].[Estado_Publicacion] (
   [ep_id] int,
-  [ep_descripcion] nvarchar,
+  [ep_descripcion] nvarchar(255),
   PRIMARY KEY ([ep_id])
 );
 
@@ -215,7 +216,7 @@ GO
 
 CREATE TABLE [MANG].[Rol] (
   [r_id] int,
-  [r_descripcion] nvarchar,
+  [r_descripcion] nvarchar(50),
   [r_baja] bit,
   PRIMARY KEY ([r_id])
 );
@@ -224,7 +225,7 @@ GO
 
 CREATE TABLE [MANG].[Funcion] (
   [f_id] int,
-  [f_descripcion] nvarchar,
+  [f_descripcion] nvarchar(50),
   [f_baja] bit,
   PRIMARY KEY ([f_id])
 );
@@ -233,17 +234,17 @@ GO
 
 CREATE TABLE [MANG].[Empresa] (
   [e_id] int,
-  [e_razon_social] nvarchar,
-  [e_mail] nvarchar,
-  [e_telefono] nvarchar,
-  [e_cuit] nvarchar,
-  [e_calle] nvarchar,
+  [e_razon_social] nvarchar(255),
+  [e_mail] nvarchar(50),
+  [e_telefono] nvarchar(50),
+  [e_cuit] nvarchar(255),
+  [e_calle] nvarchar(50),
   [e_nro_calle] numeric(18,0),
   [e_piso] numeric(18,0),
-  [e_depto] nvarchar,
-  [e_localidad] nvarchar,
-  [e_cod_postal] nvarchar,
-  [e_ciudad] nvarchar,
+  [e_depto] nvarchar(50),
+  [e_localidad] nvarchar(255),
+  [e_cod_postal] nvarchar(50),
+  [e_ciudad] nvarchar(255),
   [e_id_usuario] int,
   [e_baja] bit,
   PRIMARY KEY ([e_id])
@@ -253,7 +254,7 @@ GO
 
 CREATE TABLE [MANG].[Tipo_Documento] (
   [td_id] int,
-  [td_descripcion] nvarchar,
+  [td_descripcion] nvarchar(100),
   [td_baja] bit,
   PRIMARY KEY ([td_id])
 );
@@ -797,6 +798,123 @@ GO
 
 print (CONCAT('Relaciones ', CONVERT(VARCHAR, GETDATE(), 114)))
 ---------------RELACIONES ------------------
+
+GO
+ALTER TABLE [MANG].[Canje]  WITH CHECK ADD  CONSTRAINT [FK_Canje_Cliente] FOREIGN KEY([ca_id_cliente])
+REFERENCES [MANG].[Cliente] ([c_id])
+GO
+ALTER TABLE [MANG].[Canje] CHECK CONSTRAINT [FK_Canje_Cliente]
+GO
+ALTER TABLE [MANG].[Canje]  WITH CHECK ADD  CONSTRAINT [FK_Canje_Premio] FOREIGN KEY([ca_id_premio])
+REFERENCES [MANG].[Premio] ([pr_id])
+GO
+ALTER TABLE [MANG].[Canje] CHECK CONSTRAINT [FK_Canje_Premio]
+GO
+ALTER TABLE [MANG].[Cliente]  WITH CHECK ADD  CONSTRAINT [FK_Cliente_Tarjeta] FOREIGN KEY([c_id_tarjeta])
+REFERENCES [MANG].[Tarjeta] ([ta_id])
+GO
+ALTER TABLE [MANG].[Cliente] CHECK CONSTRAINT [FK_Cliente_Tarjeta]
+GO
+ALTER TABLE [MANG].[Cliente]  WITH CHECK ADD  CONSTRAINT [FK_Cliente_Tipo_Documento] FOREIGN KEY([c_id_tipo_documento])
+REFERENCES [MANG].[Tipo_Documento] ([td_id])
+GO
+ALTER TABLE [MANG].[Cliente] CHECK CONSTRAINT [FK_Cliente_Tipo_Documento]
+GO
+ALTER TABLE [MANG].[Cliente]  WITH CHECK ADD  CONSTRAINT [FK_Cliente_Usuario] FOREIGN KEY([c_id_usuario])
+REFERENCES [MANG].[Usuario] ([u_id])
+GO
+ALTER TABLE [MANG].[Cliente] CHECK CONSTRAINT [FK_Cliente_Usuario]
+GO
+ALTER TABLE [MANG].[Compra]  WITH CHECK ADD  CONSTRAINT [FK_Compra_Cliente] FOREIGN KEY([co_id_cliente])
+REFERENCES [MANG].[Cliente] ([c_id])
+GO
+ALTER TABLE [MANG].[Compra] CHECK CONSTRAINT [FK_Compra_Cliente]
+GO
+ALTER TABLE [MANG].[Compra]  WITH CHECK ADD  CONSTRAINT [FK_Compra_Ubicacion] FOREIGN KEY([co_id_ubicacion])
+REFERENCES [MANG].[Ubicacion] ([ub_id])
+GO
+ALTER TABLE [MANG].[Compra] CHECK CONSTRAINT [FK_Compra_Ubicacion]
+GO
+ALTER TABLE [MANG].[Empresa]  WITH CHECK ADD  CONSTRAINT [FK_Empresa_Usuario] FOREIGN KEY([e_id_usuario])
+REFERENCES [MANG].[Usuario] ([u_id])
+GO
+ALTER TABLE [MANG].[Empresa] CHECK CONSTRAINT [FK_Empresa_Usuario]
+GO
+ALTER TABLE [MANG].[Factura]  WITH CHECK ADD  CONSTRAINT [FK_Factura_Empresa] FOREIGN KEY([fa_id_empresa])
+REFERENCES [MANG].[Empresa] ([e_id])
+GO
+ALTER TABLE [MANG].[Factura] CHECK CONSTRAINT [FK_Factura_Empresa]
+GO
+ALTER TABLE [MANG].[Factura]  WITH CHECK ADD  CONSTRAINT [FK_Factura_Forma_Pago] FOREIGN KEY([fa_id_forma_pago])
+REFERENCES [MANG].[Forma_Pago] ([fp_id])
+GO
+ALTER TABLE [MANG].[Factura] CHECK CONSTRAINT [FK_Factura_Forma_Pago]
+GO
+ALTER TABLE [MANG].[Funcion_x_Rol]  WITH CHECK ADD  CONSTRAINT [FK_Funcion_x_Rol_Funcion] FOREIGN KEY([fxr_id_funcion])
+REFERENCES [MANG].[Funcion] ([f_id])
+GO
+ALTER TABLE [MANG].[Funcion_x_Rol] CHECK CONSTRAINT [FK_Funcion_x_Rol_Funcion]
+GO
+ALTER TABLE [MANG].[Funcion_x_Rol]  WITH CHECK ADD  CONSTRAINT [FK_Funcion_x_Rol_Rol] FOREIGN KEY([fxr_id_rol])
+REFERENCES [MANG].[Rol] ([r_id])
+GO
+ALTER TABLE [MANG].[Funcion_x_Rol] CHECK CONSTRAINT [FK_Funcion_x_Rol_Rol]
+GO
+ALTER TABLE [MANG].[Item_Factura]  WITH CHECK ADD  CONSTRAINT [FK_Item_Factura_Compra] FOREIGN KEY([i_id_compra])
+REFERENCES [MANG].[Compra] ([co_id])
+GO
+ALTER TABLE [MANG].[Item_Factura] CHECK CONSTRAINT [FK_Item_Factura_Compra]
+GO
+ALTER TABLE [MANG].[Item_Factura]  WITH CHECK ADD  CONSTRAINT [FK_Item_Factura_Factura] FOREIGN KEY([i_d_factura])
+REFERENCES [MANG].[Factura] ([fa_id])
+GO
+ALTER TABLE [MANG].[Item_Factura] CHECK CONSTRAINT [FK_Item_Factura_Factura]
+GO
+ALTER TABLE [MANG].[Publicacion]  WITH CHECK ADD  CONSTRAINT [FK_Publicacion_Empresa] FOREIGN KEY([p_id_empresa])
+REFERENCES [MANG].[Empresa] ([e_id])
+GO
+ALTER TABLE [MANG].[Publicacion] CHECK CONSTRAINT [FK_Publicacion_Empresa]
+GO
+ALTER TABLE [MANG].[Publicacion]  WITH CHECK ADD  CONSTRAINT [FK_Publicacion_Estado_Publicacion] FOREIGN KEY([p_id_estado_publicacion])
+REFERENCES [MANG].[Estado_Publicacion] ([ep_id])
+GO
+ALTER TABLE [MANG].[Publicacion] CHECK CONSTRAINT [FK_Publicacion_Estado_Publicacion]
+GO
+ALTER TABLE [MANG].[Publicacion]  WITH CHECK ADD  CONSTRAINT [FK_Publicacion_Grado] FOREIGN KEY([p_id_grado])
+REFERENCES [MANG].[Grado] ([g_id])
+GO
+ALTER TABLE [MANG].[Publicacion] CHECK CONSTRAINT [FK_Publicacion_Grado]
+GO
+ALTER TABLE [MANG].[Publicacion]  WITH CHECK ADD  CONSTRAINT [FK_Publicacion_Rubro] FOREIGN KEY([p_id_rubro])
+REFERENCES [MANG].[Rubro] ([ru_id])
+GO
+ALTER TABLE [MANG].[Publicacion] CHECK CONSTRAINT [FK_Publicacion_Rubro]
+GO
+ALTER TABLE [MANG].[Rol_x_Usuario]  WITH CHECK ADD  CONSTRAINT [FK_Rol_x_Usuario_Rol] FOREIGN KEY([rxu_id_rol])
+REFERENCES [MANG].[Rol] ([r_id])
+GO
+ALTER TABLE [MANG].[Rol_x_Usuario] CHECK CONSTRAINT [FK_Rol_x_Usuario_Rol]
+GO
+ALTER TABLE [MANG].[Rol_x_Usuario]  WITH CHECK ADD  CONSTRAINT [FK_Rol_x_Usuario_Usuario] FOREIGN KEY([rxu_id_usuario])
+REFERENCES [MANG].[Usuario] ([u_id])
+GO
+ALTER TABLE [MANG].[Rol_x_Usuario] CHECK CONSTRAINT [FK_Rol_x_Usuario_Usuario]
+GO
+ALTER TABLE [MANG].[Show]  WITH CHECK ADD  CONSTRAINT [FK_Show_Publicacion] FOREIGN KEY([s_id_publicacion])
+REFERENCES [MANG].[Publicacion] ([p_id])
+GO
+ALTER TABLE [MANG].[Show] CHECK CONSTRAINT [FK_Show_Publicacion]
+GO
+ALTER TABLE [MANG].[Ubicacion]  WITH CHECK ADD  CONSTRAINT [FK_Ubicacion_Publicacion] FOREIGN KEY([ub_id_publicacion])
+REFERENCES [MANG].[Publicacion] ([p_id])
+GO
+ALTER TABLE [MANG].[Ubicacion] CHECK CONSTRAINT [FK_Ubicacion_Publicacion]
+GO
+ALTER TABLE [MANG].[Ubicacion]  WITH CHECK ADD  CONSTRAINT [FK_Ubicacion_Tipo_Ubicacion] FOREIGN KEY([ub_id_tipo_ubicacion])
+REFERENCES [MANG].[Tipo_Ubicacion] ([tu_id])
+GO
+ALTER TABLE [MANG].[Ubicacion] CHECK CONSTRAINT [FK_Ubicacion_Tipo_Ubicacion]
+GO
 
 
 print (CONCAT('Fin del Script Inicial', CONVERT(VARCHAR, GETDATE(), 114)))
