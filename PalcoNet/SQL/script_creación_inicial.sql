@@ -1,14 +1,14 @@
 USE GD2C2018;
 GO
 
-CREATE SCHEMA MANG; 
+--CREATE SCHEMA MANG; 
+--GO
 
-GO
 print (CONCAT('Creacion de tablas ', CONVERT(VARCHAR, GETDATE(), 114)))
 
 --------------------TABLAS---------------------------------------------
 CREATE TABLE [MANG].[Factura] (
-  [fa_id] int,
+  [fa_id] int IDENTITY(1,1),
   [fa_id_empresa] int,
   [fa_nro] numeric(18,0),
   [fa_fecha] datetime,
@@ -20,7 +20,7 @@ CREATE TABLE [MANG].[Factura] (
 GO
 
 CREATE TABLE [MANG].[Ubicacion] (
-  [ub_id] int,
+  [ub_id] int IDENTITY(1,1),
   [ub_fila] varchar(3),
   [ub_asiento] numeric(18,0),
   [ub_sin_numerar] bit,
@@ -33,7 +33,7 @@ CREATE TABLE [MANG].[Ubicacion] (
 GO
 
 CREATE TABLE [MANG].[Tipo_Ubicacion] (
-  [tu_id] int,
+  [tu_id] int IDENTITY(1,1),
   [tu_codigo] numeric(18,0),
   [tu_descripcion] nvarchar(255),
   [tu_baja] bit,
@@ -43,7 +43,7 @@ CREATE TABLE [MANG].[Tipo_Ubicacion] (
 GO
 
 CREATE TABLE [MANG].[Premio] (
-  [pr_id] int,
+  [pr_id] int IDENTITY(1,1),
   [pr_codigo] nvarchar(50),
   [pr_descripcion] nvarchar(100),
   [pr_cantidad] int,
@@ -63,7 +63,7 @@ CREATE TABLE [MANG].[Rol_x_Usuario] (
 GO
 
 CREATE TABLE [MANG].[Tarjeta] (
-  [ta_id] int,
+  [ta_id] int IDENTITY(1,1),
   [ta_nro] nvarchar(50),
   [ta_vencimiento] nvarchar(8),
   [ta_cod_verificador] char(3),
@@ -74,7 +74,7 @@ CREATE TABLE [MANG].[Tarjeta] (
 GO
 
 CREATE TABLE [MANG].[Rubro] (
-  [ru_id] int,
+  [ru_id] int IDENTITY(1,1),
   [ru_descripcion] nvarchar(255),
   PRIMARY KEY ([ru_id])
 );
@@ -90,7 +90,7 @@ CREATE TABLE [MANG].[Funcion_x_Rol] (
 GO
 
 CREATE TABLE [MANG].[Canje] (
-  [ca_id] int,
+  [ca_id] int IDENTITY(1,1),
   [ca_id_cliente] int,
   [ca_id_premio] int,
   [ca_fecha_canje] datetime,
@@ -100,7 +100,7 @@ CREATE TABLE [MANG].[Canje] (
 GO
 
 CREATE TABLE [MANG].[Item_Factura] (
-  [i_id] int,
+  [i_id] int IDENTITY(1,1),
   [i_id_compra] int,
   [i_d_factura] int,
   [i_monto] numeric(18,2),
@@ -112,7 +112,7 @@ CREATE TABLE [MANG].[Item_Factura] (
 GO
 
 CREATE TABLE [MANG].[Forma_Pago] (
-  [fp_id] int,
+  [fp_id] int IDENTITY(1,1),
   [fp_descripcion] nvarchar(255),
   [fp_baja] bit,
   PRIMARY KEY ([fp_id])
@@ -121,7 +121,7 @@ CREATE TABLE [MANG].[Forma_Pago] (
 GO
 
 CREATE TABLE [MANG].[Publicacion] (
-  [p_id] int,
+  [p_id] int IDENTITY(1,1),
   [p_codigo] numeric(18,0),
   [p_descripcion] nvarchar(255),
   [p_fecha_publicacion] datetime,
@@ -138,7 +138,7 @@ CREATE TABLE [MANG].[Publicacion] (
 GO
 
 CREATE TABLE [MANG].[Compra] (
-  [co_id] int,
+  [co_id] int IDENTITY(1,1),
   [co_id_cliente] int,
   [co_id_ubicacion] int,
   [co_fecha_compra] datetime,
@@ -152,7 +152,7 @@ CREATE TABLE [MANG].[Compra] (
 GO
 
 CREATE TABLE [MANG].[Grado] (
-  [g_id] int,
+  [g_id] int IDENTITY(1,1),
   [g_prioridad] nvarchar(50),
   [g_comision] numeric(18,0),
   PRIMARY KEY ([g_id])
@@ -161,7 +161,7 @@ CREATE TABLE [MANG].[Grado] (
 GO
 
 CREATE TABLE [MANG].[Show] (
-  [s_id] int,
+  [s_id] int IDENTITY(1,1),
   [s_fecha] datetime,
   [s_id_publicacion] int,
   PRIMARY KEY ([s_id])
@@ -170,7 +170,7 @@ CREATE TABLE [MANG].[Show] (
 GO
 
 CREATE TABLE [MANG].[Cliente] (
-  [c_id] int,
+  [c_id] int IDENTITY(1,1),
   [c_nombre] nvarchar(255),
   [c_apellido] nvarchar(255),
   [c_id_tipo_documento] int,
@@ -196,7 +196,7 @@ CREATE TABLE [MANG].[Cliente] (
 GO
 
 CREATE TABLE [MANG].[Usuario] (
-  [u_id] int,
+  [u_id] int IDENTITY(1,1),
   [u_nombre_usuario] varchar(100),
   [u_password] varbinary,
   [u_baja] bit,
@@ -207,7 +207,7 @@ CREATE TABLE [MANG].[Usuario] (
 GO
 
 CREATE TABLE [MANG].[Estado_Publicacion] (
-  [ep_id] int,
+  [ep_id] int IDENTITY(1,1),
   [ep_descripcion] nvarchar(255),
   PRIMARY KEY ([ep_id])
 );
@@ -215,7 +215,7 @@ CREATE TABLE [MANG].[Estado_Publicacion] (
 GO
 
 CREATE TABLE [MANG].[Rol] (
-  [r_id] int,
+  [r_id] int IDENTITY(1,1),
   [r_descripcion] nvarchar(50),
   [r_baja] bit,
   PRIMARY KEY ([r_id])
@@ -224,7 +224,7 @@ CREATE TABLE [MANG].[Rol] (
 GO
 
 CREATE TABLE [MANG].[Funcion] (
-  [f_id] int,
+  [f_id] int IDENTITY(1,1),
   [f_descripcion] nvarchar(50),
   [f_baja] bit,
   PRIMARY KEY ([f_id])
@@ -233,7 +233,7 @@ CREATE TABLE [MANG].[Funcion] (
 GO
 
 CREATE TABLE [MANG].[Empresa] (
-  [e_id] int,
+  [e_id] int IDENTITY(1,1),
   [e_razon_social] nvarchar(255),
   [e_mail] nvarchar(50),
   [e_telefono] nvarchar(50),
@@ -253,7 +253,7 @@ CREATE TABLE [MANG].[Empresa] (
 GO
 
 CREATE TABLE [MANG].[Tipo_Documento] (
-  [td_id] int,
+  [td_id] int IDENTITY(1,1),
   [td_descripcion] nvarchar(100),
   [td_baja] bit,
   PRIMARY KEY ([td_id])
@@ -263,6 +263,7 @@ GO
 
 print (CONCAT('Creacion de SPs ', CONVERT(VARCHAR, GETDATE(), 114)))
 
+/*
 IF EXISTS (SELECT 1 FROM sysobjects WHERE name='P_Login')
 	DROP PROCEDURE MANG.P_Login
 GO 	
@@ -712,7 +713,7 @@ BEGIN
 	RETURN @v_flag
 END
 GO
-
+*/
 print (CONCAT('INSERTS ', CONVERT(VARCHAR, GETDATE(), 114)))
 ---------------------------------- INSERTS ------------------------------
 BEGIN TRY
@@ -775,7 +776,7 @@ INSERT INTO MANG.Funcion VALUES
 --(3,7)
 
 -- ROLES X USUARIO
-INSERT INTO MANG.Roles_x_Usuario (id_usuario, id_rol) VALUES (1, 1)
+--INSERT INTO MANG.Rol_x_Usuario (rxu_id_usuario, rxu_id_rol) VALUES (1, 1)
 
 --TIPO_DOCUMENTO
 INSERT MANG.Tipo_Documento VALUES ('DNI',0) 
