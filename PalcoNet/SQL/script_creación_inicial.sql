@@ -779,8 +779,94 @@ INSERT INTO MANG.Funcion VALUES
 --INSERT INTO MANG.Rol_x_Usuario (rxu_id_usuario, rxu_id_rol) VALUES (1, 1)
 
 --TIPO_DOCUMENTO
-INSERT MANG.Tipo_Documento VALUES ('DNI',0) 
-INSERT MANG.Tipo_Documento VALUES ('PASAPORTE',0) 
+INSERT MANG.Tipo_Documento VALUES ('DNI',0); 
+INSERT MANG.Tipo_Documento VALUES ('PASAPORTE',0); 
+
+
+--FORMA DE PAGO
+INSERT MANG.Forma_Pago VALUES ('Efectivo', 0);
+INSERT MANG.Forma_Pago VALUES ('Tarjeta de Crédito', 0); 
+
+-- TIPO DE UBICACION
+INSERT INTO MANG.Tipo_Ubicacion (tu_codigo, tu_descripcion, tu_baja)
+SELECT 
+	DISTINCT 
+	[Ubicacion_Tipo_Codigo],
+    [Ubicacion_Tipo_Descripcion],
+	0 AS 'baja'
+FROM [gd_esquema].[Maestra]
+WHERE 
+	[Ubicacion_Tipo_Codigo] IS NOT NULL
+ORDER BY 
+	[Ubicacion_Tipo_Descripcion] ASC
+
+-- UBICACION - Depende de PUBLICACION
+/*INSERT INTO MANG.Ubicacion (ub_fila, ub_asiento, ub_sin_numerar, ub_precio, ub_id_publicacion, ub_id_tipo_ubicacion)
+SELECT 
+	DISTINCT
+    [Ubicacion_Fila],
+    [Ubicacion_Asiento],
+    [Ubicacion_Sin_numerar],
+    [Ubicacion_Precio],
+	(select top 1 p_id from MANG.Publicacion where p_codigo = [Espectaculo_Cod]) as 'id_publicacion',
+    (select top 1 tu_id from MANG.Tipo_Ubicacion where tu_codigo = [Ubicacion_Tipo_Codigo]) as 'id_tipo ubicacion'
+FROM [gd_esquema].[Maestra]
+where Espectaculo_Cod = 12424
+*/
+
+-- COMPRAS - depende de PUBLICACION Y CLIENTE
+/*
+select 
+	DISTINCT
+	[Espectaculo_Cod],
+    [Ubicacion_Fila],
+    [Ubicacion_Asiento],
+    [Ubicacion_Precio],
+	[Ubicacion_Tipo_Codigo],
+	[Cli_Dni],
+	[Compra_Fecha],
+	[Compra_Cantidad]
+into #temp_compras
+from [gd_esquema].[Maestra]
+where 
+	[Cli_Dni] IS NOT NULL
+	and [Factura_Nro] IS NOT NULL
+
+--INSERT INTO MANG.Compra 
+--(co_id_cliente, 
+--co_id_ubicacion, 
+--co_fecha_compra, 
+--co_puntos_obtenidos, 
+--co_puntos_restantes,
+--co_fecha_venc_puntos, 
+--co_facturada)
+
+select 
+	(select c_id from MANG.Cliente where c_nro_documento = t.Cli_Dni) as 'id_cliente',
+	(select 
+		ub_id 
+	from MANG.Ubicacion
+	inner join MANG.Tipo_Ubicacion 
+		on ub_id_tipo_ubicacion = tu_id
+	inner join MANG.Publicacion
+		on ub_id_publicacion = p_id
+	where 
+		ub_fila = t.Ubicacion_Fila 
+		and ub_asiento = t.Ubicacion_Asiento 
+		and ub_precio = t.Ubicacion_Precio
+		and tu_codigo = t.Ubicacion_Tipo_Codigo
+		and p_codigo = t.Espectaculo_Cod
+	) as 'id_ubicacion',
+	t.Compra_Fecha,
+	10 as 'puntos_obtenidos', -- 10 puntos por compra
+	10 as 'puntos_restantes', -- no consumio ninguno todavia
+	DATEADD(MONTH, 1, t.Compra_Fecha) as 'fecha_compra', -- vence al mes de la compra
+	1 as 'fue_facturada'-- porque todas las compras en la maestra estan facturadas
+from 
+	#temp_compras as t
+
+DROP TABLE #temp_compras
+*/
 
 COMMIT TRANSACTION
 
